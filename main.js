@@ -496,56 +496,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Mobile menu functionality
-    function initMobileMenu() {
-        try {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const sidebar = document.getElementById('sidebar');
-            
-            if (mobileMenu && sidebar) {
-                mobileMenu.addEventListener('click', function() {
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                    
-                    this.classList.toggle('active');
-                    sidebar.classList.toggle('mobile-open');
-                    this.setAttribute('aria-expanded', !isExpanded);
-                    
-                    // Animate sidebar
-                    if (!isExpanded) {
-                        gsap.to(sidebar, {
-                            duration: 0.3,
-                            x: 0,
-                            ease: "power2.out"
-                        });
-                    } else {
-                        gsap.to(sidebar, {
-                            duration: 0.3,
-                            x: '-100%',
-                            ease: "power2.in"
-                        });
-                    }
-                });
+// Mobile menu functionality
+function initMobileMenu() {
+    try {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('sidebar');
+        const body = document.body;
+        
+        // Create overlay for mobile menu
+        const overlay = document.createElement('div');
+        overlay.className = 'mobile-overlay';
+        document.body.appendChild(overlay);
+        
+        if (mobileMenu && sidebar) {
+            mobileMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
                 
-                // Close menu when clicking on a link
-                const navLinks = sidebar.querySelectorAll('.nav a');
-                navLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.remove('active');
-                        sidebar.classList.remove('mobile-open');
-                        mobileMenu.setAttribute('aria-expanded', 'false');
-                        
-                        gsap.to(sidebar, {
-                            duration: 0.3,
-                            x: '-100%',
-                            ease: "power2.in"
-                        });
-                    });
+                this.classList.toggle('active');
+                sidebar.classList.toggle('mobile-open');
+                body.classList.toggle('menu-open');
+                this.setAttribute('aria-expanded', !isExpanded);
+            });
+            
+            // Close menu when clicking on overlay
+            overlay.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                sidebar.classList.remove('mobile-open');
+                body.classList.remove('menu-open');
+                mobileMenu.setAttribute('aria-expanded', 'false');
+            });
+            
+            // Close menu when clicking on a link
+            const navLinks = sidebar.querySelectorAll('.nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    sidebar.classList.remove('mobile-open');
+                    body.classList.remove('menu-open');
+                    mobileMenu.setAttribute('aria-expanded', 'false');
                 });
-            }
-        } catch (error) {
-            console.error('Mobile menu error:', error);
+            });
+            
+            // Close menu when pressing escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && body.classList.contains('menu-open')) {
+                    mobileMenu.classList.remove('active');
+                    sidebar.classList.remove('mobile-open');
+                    body.classList.remove('menu-open');
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                }
+            });
         }
+    } catch (error) {
+        console.error('Mobile menu error:', error);
     }
+}
     
     // Form enhancements
     function initFormEnhancements() {
