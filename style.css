@@ -365,26 +365,27 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 0 20px 0;
+    padding: 20px 0;
     z-index: 100;
     transform: none;
-    justify-content: space-between;
 }
 
 .logo {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 13px;
+    font-size: 11px;
     letter-spacing: 0.15em;
     font-weight: 400;
-    margin-bottom: 60px;
     color: #1a1a1a;
+    margin-bottom: 30px;
 }
 
 .nav {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
+    flex: 1;
+    justify-content: space-evenly;
 }
 
 .nav a {
@@ -392,7 +393,7 @@ body::before {
     transform: rotate(180deg);
     text-decoration: none;
     color: #888;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.12em;
     transition: color 0.3s ease;
     position: relative;
@@ -1866,6 +1867,7 @@ body::before {
         display: none;
     }
 }
+
 
 
 
