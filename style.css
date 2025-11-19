@@ -353,6 +353,7 @@ body::before {
     opacity: 0.3;
 }
 
+
 .sidebar {
     position: fixed;
     left: 0;
@@ -367,6 +368,8 @@ body::before {
     padding: 40px 0;
     z-index: 100;
     transform: none;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .logo {
@@ -1864,3 +1867,4 @@ body::before {
         display: none;
     }
 }
+
