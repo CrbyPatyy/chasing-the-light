@@ -503,48 +503,66 @@ function initMobileMenu() {
         const sidebar = document.getElementById('sidebar');
         const body = document.body;
         
-        // Create overlay for mobile menu
-        const overlay = document.createElement('div');
-        overlay.className = 'mobile-overlay';
-        document.body.appendChild(overlay);
+        // Create overlay if it doesn't exist
+        let overlay = document.querySelector('.mobile-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'mobile-overlay';
+            document.body.appendChild(overlay);
+        }
         
         if (mobileMenu && sidebar) {
-            mobileMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            // Toggle menu function
+            function toggleMenu() {
+                const isExpanded = mobileMenu.getAttribute('aria-expanded') === 'true';
                 
-                this.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
                 sidebar.classList.toggle('mobile-open');
                 body.classList.toggle('menu-open');
-                this.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.setAttribute('aria-expanded', !isExpanded);
+                
+                // Prevent body scroll when menu is open
+                if (!isExpanded) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            // Mobile menu click
+            mobileMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleMenu();
             });
             
-            // Close menu when clicking on overlay
+            // Close menu when clicking overlay
             overlay.addEventListener('click', function() {
-                mobileMenu.classList.remove('active');
-                sidebar.classList.remove('mobile-open');
-                body.classList.remove('menu-open');
-                mobileMenu.setAttribute('aria-expanded', 'false');
+                if (body.classList.contains('menu-open')) {
+                    toggleMenu();
+                }
             });
             
-            // Close menu when clicking on a link
+            // Close menu when clicking nav links
             const navLinks = sidebar.querySelectorAll('.nav a');
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
-                    mobileMenu.classList.remove('active');
-                    sidebar.classList.remove('mobile-open');
-                    body.classList.remove('menu-open');
-                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    if (body.classList.contains('menu-open')) {
+                        toggleMenu();
+                    }
                 });
             });
             
-            // Close menu when pressing escape key
+            // Close menu with escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && body.classList.contains('menu-open')) {
-                    mobileMenu.classList.remove('active');
-                    sidebar.classList.remove('mobile-open');
-                    body.classList.remove('menu-open');
-                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    toggleMenu();
+                }
+            });
+            
+            // Close menu when window is resized to desktop size
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 640 && body.classList.contains('menu-open')) {
+                    toggleMenu();
                 }
             });
         }
@@ -857,3 +875,4 @@ function initMobileMenu() {
     // Initialize active nav on load
     updateActiveNav();
 });
+
